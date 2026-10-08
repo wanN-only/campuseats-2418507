@@ -1,0 +1,188 @@
+/* src/index.css: CampusEats */
+:root {
+  --green: #006b5e;
+  --green-light: #e4f0ed;
+  --bg: #f5f7f6;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --ok: #15803d;
+  --ok-light: #dcfce7;
+  --red: #b91c1c;
+  --red-light: #fee2e2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+  background: var(--green);
+  color: white;
+}
+
+.logo {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.badge {
+  display: inline-block;
+  min-width: 1.1rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: white;
+  color: var(--green);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Page layout */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 2rem;
+}
+
+.container h2 {
+  margin: 1.5rem 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+/* Cards */
+.vendor-card,
+.menu-card {
+  background: white;
+  border-radius: 12px;
+  padding: 0.9rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.vendor-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.menu-card .thumb {
+  margin-bottom: 0.6rem;
+}
+
+.vendor-card h3 {
+  margin: 0 0 0.2rem;
+  font-size: 1.3rem;
+}
+
+.menu-card h3 {
+  margin: 0 0 0.2rem;
+  font-size: 0.95rem;
+}
+
+.vendor-card p,
+.menu-card p {
+  margin: 0.1rem 0;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.menu-card .price {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Open / Closed label */
+.status {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.status.open {
+  background: var(--ok-light);
+  color: var(--ok);
+}
+
+.status.closed {
+  background: var(--red-light);
+  color: var(--red);
+}
+
+/* Button */
+.btn {
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  background: var(--green);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  background: #d1d5db;
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+/* Footer */
+.footer {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
