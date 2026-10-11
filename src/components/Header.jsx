@@ -1,6 +1,6 @@
 // src/components/Header.jsx
-function Header() {
-  const cartCount = 0
+function Header({ cartCount }) {
+  //const cartCount = 0
 
   return (
     <header className="header">
