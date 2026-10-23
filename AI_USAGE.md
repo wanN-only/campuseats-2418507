@@ -28,8 +28,29 @@ Add a new section every week, before you tag. Did not use AI? Write "None" under
 }
     
 
-
 ## Week 3
+**Tool:** Claude
+**What I asked for**
+1. How to fit the lab's `view` / `content` code into my existing `App.jsx`
+2. Why `CartPage` gave an "export named default" error
+3. Why Remove and Place order did nothing
+4. Help with the B6 feature (digit 7, order notes per item)
+5. Why the cart page crashed, and why I couldn't type in the note box
+**What the AI answered**
+| Problem | Cause | Fix |
+|---|---|---|
+| Remove and Place order did nothing | The buttons were still the lab's `// TODO` stubs | Filled in `CartItem.jsx`, `CheckoutForm.jsx` and the cart total in `CartPage.jsx` |
+| `note is not defined` | `CartItem` used `note` but never destructured it from `line` | `const { item, qty, note = '' } = line` |
+| Couldn't type in the note box | `App.jsx` never passed `onChangeNote` to `<CartPage />`, so the textarea's value never changed | Added `onChangeNote={handleChangeNote}` |
+**What I kept or changed**
+- Kept the lab's structure (cart lines as `{ item, qty }`, `handleChangeQty(itemId, delta)`, `lastOrder`).
+- Added `note: ''` to new cart lines and a `handleChangeNote` handler for B6.
+- Tested by checking the browser console (F12) and following the props from `App.jsx` to `CartPage.jsx` to `CartItem.jsx`.
+**One thing the AI got wrong**
+Its first `App.jsx` used a different cart shape (`{ ...item, qty }`) and a different `handleChangeQty(id, qty)` signature from the lab's code, so it would have broken `CartItem`. It only corrected this after I uploaded the lab PDF.
+
+
+## Week 4
 - Tool(s):
 - What I asked for:
 - What I kept, changed or rejected, and why:
