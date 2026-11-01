@@ -51,6 +51,16 @@ Its first `App.jsx` used a different cart shape (`{ ...item, qty }`) and a diffe
 
 
 ## Week 4
+- Tool(s): Claude
+- What I asked for: Help fixing errors in my CampusEats React app (a missing `react-router-dom` dependency and an import error for `useLocalStorage`). I also asked what the difference is between `react-router-dom` and `react-router`, and how to check my work against the checkpoint rubric.
+- What I kept, changed or rejected, and why:
+  - Kept: the advice to run `npm install react-router-dom`, because my files already import from `react-router-dom`, so this was the quickest fix.
+  - Kept: the explanation of named vs default exports, and I checked my own code against it.
+  - Kept: the testing checklist (deep links, refresh, Local Storage, 404 pages) to test each rubric criterion myself.
+  - Rejected: switching my imports to `react-router` (it works in v7, but I would have to edit every file).
+- One thing the AI got wrong and how I fixed it: The AI first guessed the problem could be in either file, and its first answer assumed `useLocalStorage` might not be exported at all. When I pasted my real code, it turned out the hook used `export default` while `CartProvider.jsx` used a named import `{ useLocalStorage }`. I fixed it by making the import match the export.
+
+## Week 5
 - Tool(s):
 - What I asked for:
 - What I kept, changed or rejected, and why:
