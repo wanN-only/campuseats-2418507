@@ -1,29 +1,34 @@
+import { Link } from 'react-router'
 import { useCart } from '../hooks/useCart.js'
 
 function OrdersPage() {
   const { orders } = useCart()
 
   if (orders.length === 0) {
-    return <p className="muted">No orders yet.</p>
+    return (
+      <section>
+        <h2 className="section-title">My orders</h2>
+        <p className="muted">No orders yet. <Link to="/">Browse vendors</Link></p>
+      </section>
+    )
   }
 
   return (
     <section>
-      <h2 className="section-title">Your orders</h2>
-      {[...orders].reverse().map((order) => (
-        <div className="card" key={order.id}>
-          <p><strong>Pickup {order.pickupTime}</strong> · {order.mahallah}</p>
-          <ul>
-            {order.lines.map((line) => (
-              <li key={line.item.id}>
-                {line.qty} × {line.item.name}
-                {line.note && ` (${line.note})`}
-              </li>
-            ))}
-          </ul>
-          <p>Total: RM {order.total.toFixed(2)}</p>
-        </div>
-      ))}
+      <h2 className="section-title">My orders</h2>
+      <ul className="order-list">
+        {orders.map((order) => (
+          <li key={order.id} className="card">
+            <p className="cart-name">
+              Pickup {order.pickupTime} · Mahallah {order.mahallah}
+            </p>
+            <p className="muted">
+              {order.lines.map((l) => `${l.qty}× ${l.item.name}`).join(', ')}
+            </p>
+            <p className="price">RM {order.total.toFixed(2)}</p>
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }

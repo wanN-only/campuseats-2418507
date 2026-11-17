@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 function NotFoundPage() {
   return (
-    <div className="card">
-      <h2>Page not found</h2>
-      <Link to="/">Go home</Link>
-    </div>
+    <section>
+      <h2 className="section-title">Page not found</h2>
+      <p className="muted">That page does not exist. <Link to="/">Go to the home page</Link></p>
+    </section>
   )
 }
 

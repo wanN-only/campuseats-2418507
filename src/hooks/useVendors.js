@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-// Fetches the vendors and owns the loading, error and reload logic.
+// Custom hook that hides the fetch / loading / error logic from Week 3 behind one call.
 export function useVendors() {
   const [vendors, setVendors] = useState([])
   const [loading, setLoading] = useState(true)
@@ -17,22 +17,17 @@ export function useVendors() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return res.json()
       })
-      .then((data) => {
-        setVendors(data)
-        setLoading(false)
-      })
+      .then(setVendors)
       .catch((err) => {
-        if (err.name === 'AbortError') return
-        setError(err.message)
-        setLoading(false)
+        if (err.name !== 'AbortError') setError(err.message)
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false)
       })
 
     return () => controller.abort()
   }, [reloadKey])
 
-  function reload() {
-    setReloadKey((k) => k + 1)
-  }
-
+  const reload = () => setReloadKey((k) => k + 1)
   return { vendors, loading, error, reload }
 }

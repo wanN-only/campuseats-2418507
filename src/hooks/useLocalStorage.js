@@ -1,13 +1,15 @@
-// src/hooks/useLocalStorage.js
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-function useLocalStorage(key, initialValue) {
+// Custom hook: works like useState, but the value is saved in localStorage
+// so it survives a page refresh. A custom hook is just a function whose name starts with "use"
+// and that calls other hooks.
+export function useLocalStorage(key, initialValue) {
   const [value, setValue] = useState(() => {
     try {
-      const stored = localStorage.getItem(key)
-      return stored !== null ? JSON.parse(stored) : initialValue
+      const saved = localStorage.getItem(key)
+      return saved !== null ? JSON.parse(saved) : initialValue
     } catch {
-      return initialValue // bad JSON or storage unavailable
+      return initialValue
     }
   })
 
@@ -15,11 +17,9 @@ function useLocalStorage(key, initialValue) {
     try {
       localStorage.setItem(key, JSON.stringify(value))
     } catch {
-      // storage full or blocked: ignore, the app still works
+      // storage full or blocked: keep working in memory
     }
   }, [key, value])
 
   return [value, setValue]
 }
-
-export default useLocalStorage

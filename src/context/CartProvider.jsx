@@ -1,34 +1,27 @@
-// src/context/CartProvider.jsx
 import { CartContext } from './cart-context.js'
-import useLocalStorage from '../hooks/useLocalStorage.js'
+import { useLocalStorage } from '../hooks/useLocalStorage.js'
 
+// CartProvider owns the cart and the orders, and shares them with every component below it.
+// No more passing cart props through Header, pages and lists (prop drilling).
 export function CartProvider({ children }) {
-  const [cart, setCart] = useLocalStorage('cart', []) // lines of { item, qty, note }
-  const [orders, setOrders] = useLocalStorage('orders', [])
-
-  // Derived values: never stored
-  const count = cart.reduce((sum, line) => sum + line.qty, 0)
-  const total = cart.reduce((sum, line) => sum + line.item.price * line.qty, 0)
+  const [cart, setCart] = useLocalStorage('campuseats-cart', [])
+  const [orders, setOrders] = useLocalStorage('campuseats-orders', [])
 
   function addToCart(item) {
     setCart((prev) => {
       const existing = prev.find((line) => line.item.id === item.id)
       if (existing) {
-        return prev.map((line) =>
-          line.item.id === item.id ? { ...line, qty: line.qty + 1 } : line
-        )
+        return prev.map((line) => (line.item.id === item.id ? { ...line, qty: line.qty + 1 } : line))
       }
-      return [...prev, { item, qty: 1, note: '' }]
+      return [...prev, { item, qty: 1 }]
     })
   }
 
   function changeQty(itemId, delta) {
     setCart((prev) =>
       prev
-        .map((line) =>
-          line.item.id === itemId ? { ...line, qty: line.qty + delta } : line
-        )
-        .filter((line) => line.qty > 0)
+        .map((line) => (line.item.id === itemId ? { ...line, qty: line.qty + delta } : line))
+        .filter((line) => line.qty > 0),
     )
   }
 
@@ -36,37 +29,22 @@ export function CartProvider({ children }) {
     setCart((prev) => prev.filter((line) => line.item.id !== itemId))
   }
 
-  // Extra, for your B6 feature (order notes)
-  function changeNote(itemId, note) {
-    setCart((prev) =>
-      prev.map((line) => (line.item.id === itemId ? { ...line, note } : line))
-    )
-  }
-
-  // details = { name, mahallah, pickupTime } from CheckoutForm
   function placeOrder(details) {
     const order = {
-      id: Date.now(),
+      id: `ord-${Date.now()}`,
+      createdAt: new Date().toISOString(),
       ...details,
       lines: cart,
-      total,
+      total: cart.reduce((sum, line) => sum + line.item.price * line.qty, 0),
     }
-    setOrders((prev) => [...prev, order])
+    setOrders((prev) => [order, ...prev])
     setCart([])
     return order
   }
 
-  const value = {
-    cart,
-    orders,
-    count,
-    total,
-    addToCart,
-    changeQty,
-    removeFromCart,
-    changeNote,
-    placeOrder,
-  }
+  const count = cart.reduce((sum, line) => sum + line.qty, 0)
+  const total = cart.reduce((sum, line) => sum + line.item.price * line.qty, 0)
 
+  const value = { cart, orders, count, total, addToCart, changeQty, removeFromCart, placeOrder }
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

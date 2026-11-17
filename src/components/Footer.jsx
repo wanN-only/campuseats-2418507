@@ -1,10 +1,8 @@
-// src/components/Footer.jsx
+// Footer: shows a JavaScript expression (the current year) inside JSX.
 function Footer() {
-  const year = new Date().getFullYear()
-
   return (
     <footer className="footer">
-      <p>© {year} CampusEats</p>
+      <p>&copy; {new Date().getFullYear()} CampusEats &middot; BICS 3301, IIUM</p>
     </footer>
   )
 }
