@@ -1,15 +1,26 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useCart } from '../hooks/useCart.js'
+import { useAuth } from '../hooks/useAuth.js'
+import { placeOrders } from '../services/orders.js'
 import CartItem from '../components/CartItem.jsx'
 import CheckoutForm from '../components/CheckoutForm.jsx'
 
 function CartPage() {
-  const { cart, total, changeQty, removeFromCart, placeOrder } = useCart()
+  const { cart, total, changeQty, removeFromCart, clearCart, changeNote } = useCart()
+  const { user } = useAuth()
   const navigate = useNavigate()
+  const [error, setError] = useState('')
 
-  function handlePlaceOrder(details) {
-    placeOrder(details)
-    navigate('/orders') // move to another page from code, not from a click on a link
+  async function handlePlaceOrder(details) {
+    setError('')
+    try {
+      await placeOrders(user, cart, details) // TODO 4
+      clearCart()
+      navigate('/orders') // move to another page from code, not from a click on a link
+    } catch (err) {
+      setError(`Could not place the order: ${err.message}`)
+    }
   }
 
   if (cart.length === 0) {
@@ -28,12 +39,15 @@ function CartPage() {
         <div className="card">
           <ul className="cart-list">
             {cart.map((line) => (
-              <CartItem key={line.item.id} line={line} onChangeQty={changeQty} onRemove={removeFromCart} />
+              <CartItem key={line.item.id} line={line} onChangeQty={changeQty} onRemove={removeFromCart} onChangeNote={changeNote} />
             ))}
           </ul>
           <p className="cart-total">Total: RM {total.toFixed(2)}</p>
         </div>
-        <CheckoutForm onPlaceOrder={handlePlaceOrder} />
+        <div>
+          {error && <p className="field-error" role="alert">{error}</p>}
+          <CheckoutForm defaultName={user?.displayName ?? ''} onPlaceOrder={handlePlaceOrder} />
+        </div>
       </div>
     </section>
   )

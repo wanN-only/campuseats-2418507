@@ -107,3 +107,15 @@ a.card:hover { border-color: var(--green-light); }
 .btn-outline { background: #fff; color: var(--green); border: 1px solid var(--green); margin-top: 0.5rem; }
 .user-name { opacity: 0.9; font-size: 0.9rem; }
 .nav { align-items: center; }
+
+/* Week 6 additions */
+.status-steps { display: flex; gap: 0.4rem; list-style: none; padding: 0; flex-wrap: 
+wrap; }
+.status-steps li { padding: 0.15rem 0.6rem; border-radius: 999px; background: 
+#eef0f3; font-size: 0.8rem; }
+.status-steps li.done { background: var(--green); color: #fff; }
+
+.order-actions { display: flex; flex-wrap: wrap; gap: 0.5rem;
+ align-items: center; margin-top: 0.6rem; }
+.order-actions input { width: auto; }
+.btn-small { padding: 0.3rem 0.8rem; font-size: 0.85rem; }

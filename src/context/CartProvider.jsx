@@ -5,7 +5,6 @@ import { useLocalStorage } from '../hooks/useLocalStorage.js'
 // No more passing cart props through Header, pages and lists (prop drilling).
 export function CartProvider({ children }) {
   const [cart, setCart] = useLocalStorage('campuseats-cart', [])
-  const [orders, setOrders] = useLocalStorage('campuseats-orders', [])
 
   function addToCart(item) {
     setCart((prev) => {
@@ -13,9 +12,15 @@ export function CartProvider({ children }) {
       if (existing) {
         return prev.map((line) => (line.item.id === item.id ? { ...line, qty: line.qty + 1 } : line))
       }
-      return [...prev, { item, qty: 1 }]
+      return [...prev, { item, qty: 1, note: '' }]
     })
   }
+
+  function changeNote(itemId, note) {
+  setCart((prev) =>
+    prev.map((line) => (line.item.id === itemId ? { ...line, note } : line)),
+  )
+}
 
   function changeQty(itemId, delta) {
     setCart((prev) =>
@@ -29,22 +34,12 @@ export function CartProvider({ children }) {
     setCart((prev) => prev.filter((line) => line.item.id !== itemId))
   }
 
-  function placeOrder(details) {
-    const order = {
-      id: `ord-${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      ...details,
-      lines: cart,
-      total: cart.reduce((sum, line) => sum + line.item.price * line.qty, 0),
-    }
-    setOrders((prev) => [order, ...prev])
+   function clearCart() {
     setCart([])
-    return order
   }
-
   const count = cart.reduce((sum, line) => sum + line.qty, 0)
   const total = cart.reduce((sum, line) => sum + line.item.price * line.qty, 0)
 
-  const value = { cart, orders, count, total, addToCart, changeQty, removeFromCart, placeOrder }
+  const value = { cart, count, total, addToCart, changeQty, removeFromCart,  clearCart, changeNote }
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
+import { subscribeToVendors, subscribeToVendor, subscribeToMenu } from '../services/vendors'
 
-// Custom hook that hides the fetch / loading / error logic from Week 3 behind one call.
 export function useVendors() {
   const [vendors, setVendors] = useState([])
   const [loading, setLoading] = useState(true)
@@ -8,26 +8,56 @@ export function useVendors() {
   const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
-    const controller = new AbortController()
     setLoading(true)
     setError(null)
 
-    fetch('/api/vendors.json', { signal: controller.signal })
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        return res.json()
-      })
-      .then(setVendors)
-      .catch((err) => {
-        if (err.name !== 'AbortError') setError(err.message)
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false)
-      })
+    const unsubscribe = subscribeToVendors(
+      (data) => {
+        setVendors(data)
+        setLoading(false)
+      },
+      (err) => {
+        setError(err.message)
+        setLoading(false)
+      },
+    )
 
-    return () => controller.abort()
+    return () => unsubscribe()
   }, [reloadKey])
 
-  const reload = () => setReloadKey((k) => k + 1)
-  return { vendors, loading, error, reload }
+  return { vendors, loading, error, reload: () => setReloadKey((k) => k + 1) }
+}
+
+export function useVendor(vendorId) {
+  const [vendor, setVendor] = useState(null)
+  const [menu, setMenu] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    setLoading(true)
+    setError(null)
+
+    const onError = (err) => {
+      setError(err.message)
+      setLoading(false)
+    }
+
+    const stopVendor = subscribeToVendor(
+      vendorId,
+      (data) => {
+        setVendor(data)
+        setLoading(false)
+      },
+      onError,
+    )
+    const stopMenu = subscribeToMenu(vendorId, setMenu, onError)
+
+    return () => {
+      stopVendor()
+      stopMenu()
+    }
+  }, [vendorId])
+
+  return { vendor, menu, loading, error }
 }
